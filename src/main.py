@@ -21,7 +21,7 @@ def launch_chrome_for_testing():
         print("="*50)
 
         if not os.path.exists(executable_path):
-            print("\n[!] Chrome for Testing is missing. Install it using: playwright install chromium")
+            print("\n[!] Chrome for Testing is missing. Install it using: scrapling install")
             return
 
         browser = p.chromium.launch_persistent_context(
