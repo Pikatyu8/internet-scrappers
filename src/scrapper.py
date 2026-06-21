@@ -210,7 +210,7 @@ def scrape_vk_profile_page(page, url, scraped_posts, executor, json_file):
         print("[*] No new posts detected to save.")
 
 def scrape_vk_album_logic(page, url, scraped_posts, executor, json_file):
-    """Внутренняя логика парсинга фотографий альбома ВК."""
+    """Логика парсинга фотографий альбома ВК."""
     print("[*] Scrolling and loading all photos in the album...")
     last_photo_count = 0
     no_change_count = 0
@@ -218,7 +218,8 @@ def scrape_vk_album_logic(page, url, scraped_posts, executor, json_file):
         page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
         time.sleep(1)
         
-        load_more = page.locator("#ui_photos_load_more, ._ui_photos_load_more")
+        # Используем .first для предотвращения Strict Mode Error из-за дублирующихся SPA-контейнеров
+        load_more = page.locator("#ui_photos_load_more, ._ui_photos_load_more").first
         if load_more.is_visible():
             try:
                 load_more.click(timeout=3000)
@@ -322,16 +323,11 @@ def scrape_vk_album_logic(page, url, scraped_posts, executor, json_file):
         page.keyboard.press("ArrowRight")
 
 def scrape_vk():
-    """Единая точка входа для сбора данных ВК с автоматическим определением типа."""
+    """Интерактивная точка входа с поддержкой автоматического определения типа открытой страницы."""
     os.makedirs(MEDIA_DIR, exist_ok=True)
     json_file = "vk_data.json"
     scraped_posts = load_json_data(json_file)
     executor = ThreadPoolExecutor(max_workers=5)
-
-    target_url = input("\n[!] Enter VK URL (Album or Profile/Group wall): ").strip()
-    if not target_url:
-        print("[!] URL cannot be empty.")
-        return
 
     with sync_playwright() as p:
         executable_path = p.chromium.executable_path
@@ -346,12 +342,14 @@ def scrape_vk():
         )
         
         page = browser.pages[0] if browser.pages else browser.new_page()
-        page.goto(target_url)
+        page.goto("https://vk.com")
         
-        print("\n[!] Loading VK... Waiting for page stability...")
-        time.sleep(4)
+        input("\n[!] Open the target VK Album or Profile/Group wall in the browser, then press Enter to start...")
         
-        # Автоматическое определение типа контента
+        target_url = page.url()
+        print(f"[*] Starting scraper on: {target_url}")
+        
+        # Автоматическое определение типа контента на текущей вкладке
         is_profile = False
         if page.locator(".ProfileHeader, [data-testid='profile-header'], #profile_redesigned, #owner_page_name, #page-wall").count() > 0:
             is_profile = True
@@ -656,7 +654,7 @@ def scrape_bluesky_bookmarks():
                     if not post_path:
                         continue
                         
-                    post_url = f"https://vk.com{post_path}"
+                    post_url = f"https://bsky.app{post_path}"
                     post_id = post_path.split('/')[-1]
 
                     if post_url in scraped_posts:
