@@ -218,7 +218,7 @@ def scrape_vk_album_logic(page, url, scraped_posts, executor, json_file):
         page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
         time.sleep(1)
         
-        # Используем .first для предотвращения Strict Mode Error из-за дублирующихся SPA-контейнеров
+        # Используем .first для предотвращения Strict Mode Error
         load_more = page.locator("#ui_photos_load_more, ._ui_photos_load_more").first
         if load_more.is_visible():
             try:
@@ -290,7 +290,8 @@ def scrape_vk_album_logic(page, url, scraped_posts, executor, json_file):
         if date_elem.count() > 0:
             date_text = date_elem.text_content().strip()
             
-        current_url = page.url()
+        # Исправлено: Свойство page.url в Playwright Python возвращает строку, скобки не нужны
+        current_url = page.url
         photo_id = current_url.split('/')[-1].split('?')[0] if '/photo' in current_url else f"photo_{idx}"
         
         print(f"[{idx+1}/{total_photos}] URL: {current_url} | Img: {img_src[:50] if img_src else 'None'}...")
@@ -346,7 +347,8 @@ def scrape_vk():
         
         input("\n[!] Open the target VK Album or Profile/Group wall in the browser, then press Enter to start...")
         
-        target_url = page.url()
+        # Исправлено: Свойство page.url в Playwright Python возвращает строку, скобки не нужны
+        target_url = page.url
         print(f"[*] Starting scraper on: {target_url}")
         
         # Автоматическое определение типа контента на текущей вкладке
