@@ -39,8 +39,9 @@ def launch_chrome_for_testing():
         print("2. Discord (discord.com)")
         print("3. Bluesky (bsky.app)")
         print("4. VKontakte (vk.com)")
+        print("5. Telegram (web.telegram.org)")
         
-        choice = input("Enter choice (1-4) or press Enter to open default page: ").strip()
+        choice = input("Enter choice (1-5) or press Enter to open default page: ").strip()
         if choice == "1":
             page.goto("https://x.com/home")
         elif choice == "2":
@@ -49,6 +50,8 @@ def launch_chrome_for_testing():
             page.goto("https://bsky.app")
         elif choice == "4":
             page.goto("https://vk.com")
+        elif choice == "5":
+            page.goto("https://web.telegram.org/a")
         else:
             page.goto("https://google.com")
 
@@ -62,9 +65,10 @@ def pdf_conversion_menu():
     print("2. Convert Twitter data (bookmarks.json)")
     print("3. Convert Bluesky data (bsky_bookmarks.json)")
     print("4. Convert VK data (vk_data.json)")
-    print("5. Custom JSON file conversion")
+    print("5. Convert Telegram data (telegram_messages.json)")
+    print("6. Custom JSON file conversion")
     
-    choice = input("Select option (1-5): ").strip()
+    choice = input("Select option (1-6): ").strip()
     
     if choice == "1":
         file_name = "disc_msgs.json"
@@ -79,6 +83,9 @@ def pdf_conversion_menu():
         file_name = "vk_data.json"
         out_name = "vk_archive.pdf"
     elif choice == "5":
+        file_name = "telegram_messages.json"
+        out_name = "telegram_messages.pdf"
+    elif choice == "6":
         file_name = input("Enter JSON filename (with extension): ").strip()
         out_name = input("Enter target PDF filename (with extension): ").strip()
     else:
@@ -98,11 +105,12 @@ def main():
         print("3. Run Twitter Bookmarks Scraper")
         print("4. Run Bluesky Saved Posts Scraper")
         print("5. Run VK Scraper (Auto-detect Album/Page)")
-        print("6. Generate PDF Archive from JSON")
-        print("7. Exit")
+        print("6. Run Telegram Scraper")
+        print("7. Generate PDF Archive from JSON")
+        print("8. Exit")
         print("═"*40)
         
-        choice = input("Select an action (1-7): ").strip()
+        choice = input("Select an action (1-8): ").strip()
         
         if choice == "1":
             launch_chrome_for_testing()
@@ -115,8 +123,10 @@ def main():
         elif choice == "5":
             scraper.scrape_vk()
         elif choice == "6":
-            pdf_conversion_menu()
+            scraper.scrape_telegram_messages()
         elif choice == "7":
+            pdf_conversion_menu()
+        elif choice == "8":
             print("\nExiting program.")
             break
         else:
