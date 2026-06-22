@@ -115,15 +115,20 @@ def main():
         if choice == "1":
             launch_chrome_for_testing()
         elif choice == "2":
-            scraper.scrape_discord_messages()
+            filename = input("Enter output JSON filename (default: disc_msgs.json): ").strip() or "disc_msgs.json"
+            scraper.scrape_discord_messages(json_file=filename)
         elif choice == "3":
-            scraper.scrape_twitter_bookmarks()
+            filename = input("Enter output JSON filename (default: bookmarks.json): ").strip() or "bookmarks.json"
+            scraper.scrape_twitter_bookmarks(json_file=filename)
         elif choice == "4":
-            scraper.scrape_bluesky_bookmarks()
+            filename = input("Enter output JSON filename (default: bsky_bookmarks.json): ").strip() or "bsky_bookmarks.json"
+            scraper.scrape_bluesky_bookmarks(json_file=filename)
         elif choice == "5":
-            scraper.scrape_vk()
+            filename = input("Enter output JSON filename (default: vk_data.json): ").strip() or "vk_data.json"
+            scraper.scrape_vk(json_file=filename)
         elif choice == "6":
-            scraper.scrape_telegram_messages()
+            filename = input("Enter output JSON filename (default: telegram_messages.json): ").strip() or "telegram_messages.json"
+            scraper.scrape_telegram_messages(json_file=filename)
         elif choice == "7":
             pdf_conversion_menu()
         elif choice == "8":
